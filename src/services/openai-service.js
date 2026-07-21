@@ -19,7 +19,7 @@ Hard requirements:
 - Model the melody as deterministic static note-event data in program memory. Events may play C, E, G, a rest, or a simultaneous combination of C/E/G. Store rhythmic duration separately from note choice so tempo is configurable.
 - Since the physical instrument has only C, E, and G, approximate unavailable pitches using the closest musically appropriate available note or a rest. Never address any motor channel other than 0, 4, and 8.
 - Make named melodies recognizable primarily through their rhythm and contour. Mood prompts should produce a tasteful original pattern using only C, E, and G.
-- For every event, strike only the requested note motors: move from REST_ANGLE to STRIKE_ANGLE, hold for STRIKE_HOLD_MS, return to REST_ANGLE, then wait for the remainder of the event duration. Rest events only wait.
+- For every event, all three motors must start at REST_ANGLE. Strike only the requested note motors by moving from REST_ANGLE to STRIKE_ANGLE, hold for STRIKE_HOLD_MS, then immediately return all three motors to REST_ANGLE before waiting for the remainder of the event duration. Rest events only wait.
 - Return all three motors to REST_ANGLE in setup() and after the melody.
 - Begin playing automatically after power-on/upload and repeat the complete melody according to REPETITIONS, with a clear pause between repetitions.
 - Use clean AVR-compatible C++, comments explaining the hardware map and melody, and no dynamic memory, String, serial input, networking, or runtime host commands.

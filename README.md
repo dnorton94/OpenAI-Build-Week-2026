@@ -36,6 +36,8 @@ Generated firmware always uses this mapping:
 
 The pulse range is 150 to 600 at 50 Hz. Because the instrument only contains C, E, and G, GPT-5.6 approximates unavailable pitches with the nearest useful note or a rest. Recognisable songs rely on rhythm and melodic contour as well as pitch.
 
+Every generated hit must be a complete mechanical cycle: all strikers start at 0 degrees, the selected note motor moves to 90 degrees, and all strikers return to 0 degrees before the next event begins. This keeps the instrument ready for repeated notes and prevents a striker from staying raised after a hit.
+
 ### Wiring
 
 | Arduino Uno | PCA9685 |
@@ -160,7 +162,7 @@ ARDUINO_CLI_PATH=arduino-cli
 ARDUINO_FQBN=arduino:avr:uno
 ARDUINO_PORT=COM3
 OPENAI_TIMEOUT_MS=90000
-COMPILE_TIMEOUT_MS=120000
+COMPILE_TIMEOUT_MS=300000
 UPLOAD_TIMEOUT_MS=60000
 ```
 
@@ -198,7 +200,7 @@ To stop the server, press `Ctrl+C` in its terminal.
 6. Select **Compile & Upload**.
 7. Watch the live console for compilation and upload progress.
 
-Aquatone only uploads after a successful compilation. The board begins playing after it resets.
+Aquatone only uploads after a successful compilation. The board begins playing after it resets. Each note event should visibly return the striker to 0 degrees before the next note is played.
 
 ## Tests
 
@@ -299,9 +301,17 @@ sudo usermod -a -G dialout "$USER"
 - Check the backend terminal for the returned error.
 - Increase `OPENAI_TIMEOUT_MS` if the request is timing out.
 
+### Compile times out on a cold Arduino build
+
+The first Arduino CLI build can take longer while it resolves libraries and fills the build cache. Keep `COMPILE_TIMEOUT_MS=300000` in `.env` to allow up to five minutes, then retry the compile.
+
 ### The motors move in the wrong direction or hit too far
 
 Disconnect servo power immediately. Check the linkage orientation and review `REST_ANGLE`, `STRIKE_ANGLE`, `SERVOMIN`, and `SERVOMAX` in the generated sketch before trying again. Mechanical installations vary even when the channel mapping is correct.
+
+### A striker does not return to rest after a note
+
+Do not upload the sketch until the generated code returns all motors to `REST_ANGLE` after every hit. The expected motion for every note is 0 degrees, 90 degrees, then back to 0 degrees before the next event.
 
 ## Security and generated files
 
