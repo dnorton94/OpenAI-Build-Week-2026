@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aquatone turns melodies into standalone Arduino firmware for a three-glass robotic instrument.">
+  <title>Aquatone — AI three-note melody firmware</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Aquatone home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>Aquatone</span>
+      </a>
+      <div class="top-actions">
+        <div class="device-pill" id="devicePill"><span class="device-dot"></span><span id="deviceText">Arduino Uno · Not configured</span></div>
+        <button class="icon-button" id="settingsButton" aria-label="Open settings" title="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.42 1.42-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2v-.08a1.7 1.7 0 0 0-1.1-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.42-1.42.06-.06A1.7 1.7 0 0 0 9.35 15a1.7 1.7 0 0 0-1.56-1.03H7.7v-2h.08a1.7 1.7 0 0 0 1.56-1.1A1.7 1.7 0 0 0 9 9l-.06-.06 1.42-1.42.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 13.34 6.4V6.3h2v.08a1.7 1.7 0 0 0 1.1 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.42 1.42-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.56 1.03H21v2h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span></span> AI-powered motion</div>
+        <h1>Turn any melody into<br><em>movement.</em></h1>
+        <p>Describe a melody. Aquatone arranges it for three tuned glasses, writes the firmware, and brings it to life.</p>
+      </section>
+
+      <section class="prompt-card card">
+        <label for="rhythmPrompt">What should your instrument play?</label>
+        <div class="prompt-input-wrap">
+          <textarea id="rhythmPrompt" maxlength="1000" rows="3" placeholder="Try “Play the melody of Happy Birthday on the three glasses”"></textarea>
+          <div class="prompt-footer">
+            <div class="suggestions" aria-label="Prompt suggestions">
+              <button type="button" data-prompt="Play the melody of Happy Birthday using the C, E, and G glasses">Happy Birthday</button>
+              <button type="button" data-prompt="Arrange Twinkle Twinkle Little Star for the C, E, and G glasses">Twinkle Twinkle</button>
+              <button type="button" data-prompt="Create a slow, relaxing melody like gentle ocean waves">Ocean calm</button>
+            </div>
+            <button class="primary-button" id="generateButton">
+              <span class="button-label"><svg viewBox="0 0 24 24"><path d="m12 3 1.1 4.4L17.5 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z"/><path d="m18.5 14 .7 2.8L22 17.5l-2.8.7-.7 2.8-.7-2.8-2.8-.7 2.8-.7.7-2.8Z"/></svg>Generate Firmware</span>
+              <span class="button-loading"><span class="spinner"></span>Composing…</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace-grid">
+        <article class="code-card card">
+          <div class="card-header">
+            <div>
+              <span class="section-kicker">Generated firmware</span>
+              <h2>AquatoneRhythm.ino</h2>
+            </div>
+            <div class="editor-actions">
+              <span id="lineCount">0 lines</span>
+              <button id="copyButton" class="mini-button" disabled>Copy</button>
+            </div>
+          </div>
+          <div class="editor-shell empty" id="editorShell">
+            <div class="empty-editor" id="emptyEditor">
+              <div class="empty-icon"><span></span><span></span><span></span></div>
+              <strong>Your firmware will appear here</strong>
+              <p>Generate a melody to see the complete three-motor Arduino sketch.</p>
+            </div>
+            <pre id="codeHighlight" aria-hidden="true"><code></code></pre>
+            <textarea id="codeEditor" aria-label="Generated Arduino source code" spellcheck="false" autocomplete="off"></textarea>
+          </div>
+          <div class="code-footer">
+            <span><i class="legend-dot safe"></i> Review and edit before flashing</span>
+            <button class="upload-button" id="uploadButton" disabled>
+              <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5"/></svg>
+              <span>Compile &amp; Upload</span>
+            </button>
+          </div>
+        </article>
+
+        <aside class="side-stack">
+          <section class="status-card card">
+            <div class="card-header compact"><div><span class="section-kicker">Device status</span><h2 id="statusTitle">Ready when you are</h2></div><span class="status-orb idle" id="statusOrb"></span></div>
+            <p id="statusMessage">Describe a melody to begin</p>
+            <div class="progress-track"><div id="progressBar"></div></div>
+            <div class="steps" id="steps">
+              <div data-step="generating"><span>1</span><p><b>Generate</b><small>AI writes the sketch</small></p></div>
+              <div data-step="compiling"><span>2</span><p><b>Compile</b><small>Arduino CLI verifies it</small></p></div>
+              <div data-step="uploading"><span>3</span><p><b>Upload</b><small>Flash the connected board</small></p></div>
+              <div data-step="running"><span>4</span><p><b>Play</b><small>Three motors perform the melody</small></p></div>
+            </div>
+          </section>
+
+          <section class="console-card card">
+            <div class="card-header compact">
+              <div><span class="section-kicker">Live output</span><h2>Console</h2></div>
+              <button id="clearLogs" class="mini-button">Clear</button>
+            </div>
+            <div class="console" id="console" role="log" aria-live="polite"><div class="console-placeholder">Waiting for an operation…</div></div>
+          </section>
+        </aside>
+      </section>
+    </main>
+    <footer><span>Aquatone · Built for the melody</span><span>C · E · G <i></i> PCA9685 <i></i> GPT-5.6</span></footer>
+  </div>
+
+  <div class="modal-backdrop" id="settingsModal" aria-hidden="true">
+    <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="settings-head"><div><span class="section-kicker">Configuration</span><h2 id="settingsTitle">Aquatone Settings</h2><p>Changes apply to the next operation and stay in server memory.</p></div><button class="icon-button" id="closeSettings" aria-label="Close settings">×</button></div>
+      <form id="settingsForm">
+        <div class="form-section"><h3>Arduino</h3><div class="form-grid">
+          <label>Board type <input name="board" required placeholder="arduino:avr:uno"><small>Fully qualified board name (FQBN)</small></label>
+          <label>COM / serial port <input name="serialPort" required placeholder="COM3"><small>For example COM3 or /dev/ttyACM0</small></label>
+          <label class="wide">Arduino CLI path <input name="arduinoCliPath" required placeholder="arduino-cli"><small>Command name or full executable path</small></label>
+        </div></div>
+        <div class="form-section"><h3>OpenAI</h3><div class="form-grid">
+          <label class="wide">API key <div class="secret-input"><input name="openaiApiKey" type="password" placeholder="Leave blank to keep the current key"><button type="button" id="toggleSecret">Show</button></div><small id="keyStatus">No key configured</small></label>
+          <label>Model <select name="model"><option value="gpt-5.6">GPT-5.6</option><option value="gpt-5.6-terra">GPT-5.6 Terra</option><option value="gpt-5.6-luna">GPT-5.6 Luna</option></select></label>
+          <label>Reasoning effort <select name="reasoningEffort"><option value="none">None</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></label>
+        </div></div>
+        <details><summary>Advanced timeouts</summary><div class="form-grid advanced">
+          <label>AI timeout (ms)<input name="openaiTimeoutMs" type="number" min="1000" max="600000"></label>
+          <label>Compile timeout (ms)<input name="compileTimeoutMs" type="number" min="1000" max="600000"></label>
+          <label>Upload timeout (ms)<input name="uploadTimeoutMs" type="number" min="1000" max="600000"></label>
+        </div></details>
+        <div class="settings-footer"><button type="button" class="secondary-button" id="cancelSettings">Cancel</button><button class="primary-button" type="submit"><span class="button-label">Save Settings</span></button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast-region" id="toastRegion" aria-live="assertive"></div>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
